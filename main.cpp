@@ -22,7 +22,7 @@ auto splitString(string input) {
 class account {
 	private:
 		float value = 0.00;
-		//map<string, float> ledger;
+		vector<string> ledger = {};
 		int transaction_num = 0;
 	
 	public: // using dedicated methods to return and edit values incase of future features
@@ -31,12 +31,19 @@ class account {
 		}
 		
 		float getValue(){
-		  return value;
+			return value;
+		}
+		
+		auto getLedger(){
+			return ledger;
 		}
 		
 		void editValue(float change){
-		  value += change;
-		  transaction_num++;
+			value += change;
+			// (CabrestopUK) I KNOW WE COULD USE A BETTER LOG FOR THE LEDGER OK, I'M TOO LAZY TO SAVE ANYTHING ELSE - IF YOU WANT IT FORK THE REPO AND MAKE IT AND I WILL HAPPILY STEAL YOUR CODE
+			string ledge = "Transaction #[" + std::to_string(transaction_num) + "] - Change \x9C[" + std::to_string(change) + "] New Amount \x9C[" + std::to_string(value) + "]";
+			ledger.push_back(ledge);
+			transaction_num++;
 		}
 };
 
@@ -52,6 +59,9 @@ class term {
 			vector<string> split = splitString(command);
 			if (split.size() == 2 and account_map.count(split[1]) == 1) {
 				std::cout << "\x9C" << std::fixed << std::setprecision(2) << account_map[split[1]].getValue() << "\n";
+				for (string ledge : account_map[split[1]].getLedger()) {
+					std::cout << ledge << "\n";
+				}
 			}
 			else if (account_map.count(split[1]) == 0){
 				std::cout << "invalid syntax - {accountname},(d {accountname})\n";
@@ -129,12 +139,12 @@ class term {
 			vector<string> split = splitString(command);
 			float transfer_amount;
 			
-			if (account_map.count(split[2]) == 0 and account_map.count(split[3]) == 0) {
-				std::cout << "not an account! \n";
-				return;
-			}
-			
 			if (split.size() == 4) {
+				if (account_map.count(split[2]) == 0 and account_map.count(split[3]) == 0) {
+					std::cout << "not an account! \n";
+					return;
+				}
+				
 				try{ // check if amount is really float
 					transfer_amount = std::stof(split[1]);
 				}
@@ -142,6 +152,7 @@ class term {
 					std::cout << "non numeric\n";
 					return;
 				}
+				
 				account_map[split[2]].editValue(0 - transfer_amount);
 				account_map[split[3]].editValue(transfer_amount);
 			}
@@ -186,8 +197,10 @@ class term {
 };
 
 int main(){
-	term running;
-	running.run();
+	#ifndef DEBUG
+		term running;
+		running.run();
 	
-	return 0;
+		return 0;
+	#endif
 }
