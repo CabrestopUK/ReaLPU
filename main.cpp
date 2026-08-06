@@ -131,8 +131,10 @@ class term {
 			
 			if (account_map.count(split[2]) == 0 and account_map.count(split[3]) == 0) {
 				std::cout << "not an account! \n";
+				return;
 			}
-			else if (split.size() == 4) {
+			
+			if (split.size() == 4) {
 				try{ // check if amount is really float
 					transfer_amount = std::stof(split[1]);
 				}
