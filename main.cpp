@@ -1,3 +1,5 @@
+// original contributer: CabrestopUK
+// note "\x9C" has to be used instead of £
 #include <iostream>
 #include <map>
 #include <string>
@@ -10,35 +12,47 @@ using std::vector;
 using std::stringstream;
 
 auto splitString(string input) {
-	stringstream ss(input);
+	/* 	Splits a string into a list of "words", separates by spaces 
+		Requires a string as an argument only */
+	stringstream ss(input); // using stringstream type as it is a simple way to separate words due to the type's methods
 	vector<string> split = {};
 	string word;
-	while (ss >> word) {
+	
+	while (ss >> word) { // fundamentally a for loop ish sequence to go through the stringstream by word
 		split.push_back(word);
 	}
 	return split;
 }
 
 class account {
-	private:
+	/*	(no args) account object - stores account value and ledger of all transactions */
+
+	private: //variables kept in private for personal sanity :) - also incase of any features of specific accounts that require limits on changing value
 		float value = 0.00;
 		vector<string> ledger = {};
-		int transaction_num = 0;
+		int transaction_num = 0; // primarily utilised for ledger
 	
-	public: // using dedicated methods to return and edit values incase of future features
+	public:
 		account(){
 			std::cout << "init account" << "\n";
 		}
 		
 		float getValue(){
+			/* 	(no args) returns float value of account */
+			
 			return value;
 		}
 		
 		auto getLedger(){
+			/* 	(no args) returns ledger(vector) of account transactions */
+			
 			return ledger;
 		}
 		
 		void editValue(float change){
+			/* 	changes value by float amount 
+				requires a float as an argument only*/
+				
 			value += change;
 			// (CabrestopUK) I KNOW WE COULD USE A BETTER LOG FOR THE LEDGER OK, I'M TOO LAZY TO SAVE ANYTHING ELSE - IF YOU WANT IT FORK THE REPO AND MAKE IT AND I WILL HAPPILY STEAL YOUR CODE
 			string ledge = "Transaction #[" + std::to_string(transaction_num) + "] - Change \x9C[" + std::to_string(change) + "] New Amount \x9C[" + std::to_string(value) + "]";
@@ -48,120 +62,97 @@ class account {
 };
 
 class term {
+	/* 	(no args) CLI instance for ReaLPU */
+	
 	public:
-		map<string, account> account_map;
+		map<string, account> account_map; // holds all accounts inside as this is the only scalable way that I could store the object
 		string input = "";
 		term() {
 			std::cout << "ReaLPU ver indev - made by CabrestopUK \n";
 		}
 		
-		void displayAccount(string command) {
-			vector<string> split = splitString(command);
-			if (split.size() == 2 and account_map.count(split[1]) == 1) {
-				std::cout << "\x9C" << std::fixed << std::setprecision(2) << account_map[split[1]].getValue() << "\n";
-				for (string ledge : account_map[split[1]].getLedger()) {
-					std::cout << ledge << "\n";
-				}
-			}
-			else if (account_map.count(split[1]) == 0){
-				std::cout << "invalid syntax - {accountname},(d {accountname})\n";
-			}
-			else {
-				std::cout << "invalid syntax - number of args,(d {accountname})\n";
+		void displayAccount(vector<string> split) {
+			/*	display the information of a single account 
+				only argument is a vector with the split user input (d {accountname})*/
+				
+			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(d {accountname})\n"; return;}
+			if (account_map.count(split[1]) == 0) {std::cout << "not an account!"; return;}
+			
+			std::cout << "\x9C" << std::fixed << std::setprecision(2) << account_map[split[1]].getValue() << "\n"; 
+			for (string ledge : account_map[split[1]].getLedger()) {
+				std::cout << ledge << "\n";
 			}
 		}
 		
 		void displayAccountList() {
+			/* 	(no args) displays all accounts in the account_map with their values */
+			
 			for (auto acc : account_map) {
 				std::cout << acc.first << " \x9C" << std::fixed << std::setprecision(2) << acc.second.getValue() << "\n";
 			}
 		}
 		
-		void newAccount(string command) {
-			vector<string> split = splitString(command);
-			if (account_map.count(split[1]) == 1) {
-				std::cout << "no duplicate accounts!\n";
-			}
-			else if (split.size() == 2) {
-				account_map[split[1]];
-			}
-			else {
-				std::cout << "invalid syntax - number of args,(n {accountname})\n";
-			}
-		}
-		
-		void removeAccount(string command) {
-			vector<string> split = splitString(command);
-			if (account_map.count(split[1]) == 0) {
-				std::cout << "not an account!\n";
-			}
-			else if (split.size() == 2) {
-				account_map.erase(split[1]);
-			}
-			else {
-				std::cout << "invalid syntax - number of args,(r {accountname})\n";
-			}
-		}
-		
-		void payment (string command) {
-			vector<string> split = splitString(command);
-			float pay_amount;
-			if (split.size() == 4) {
-				try{ // check if amount is really float
-					pay_amount = std::stof(split[3]);
-				}
-				catch(std::exception& e) {
-					std::cout << "non numeric\n";
-					return;
-				}
-				string type = split[1];
-				string target_account_name = split[2];
+		void newAccount(vector<string> split) {
+			/* 	creates a new account
+				only argument is a vector with the split user input (n {accountname}) */
 				
-				if (account_map.count(target_account_name) == 0) {
-					std::cout << "not an account! \n";
-				}
-				else if (type == "i") {
-					account_map[target_account_name].editValue(pay_amount);
-				} 
-				else if (type == "o") {
-					account_map[target_account_name].editValue(0 - pay_amount);	
-				}
-				else {
-					std::cout << "invalid syntax - type,(p {type} {accountname} {value}) use i for in and o for out in {type}\n";
-				}
-			}
-			else {
-				std::cout << "invalid syntax - number of args,(p {type} {accountname} {value}) use i for in and o for out in {type}\n";
-			}
-		}
-		
-		void transfer (string command) {
-			vector<string> split = splitString(command);
-			float transfer_amount;
+			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(n {accountname})\n"; return;}
+			if (account_map.count(split[1]) == 1) {std::cout << "no duplicate accounts!\n"; return;} // it is probably wise to avoid duplicate account names at least for now due to the account_map system
 			
-			if (split.size() == 4) {
-				if (account_map.count(split[2]) == 0 and account_map.count(split[3]) == 0) {
-					std::cout << "not an account! \n";
-					return;
-				}
-				
-				try{ // check if amount is really float
-					transfer_amount = std::stof(split[1]);
-				}
-				catch (std::exception& e) {
-					std::cout << "non numeric\n";
-					return;
-				}
-				
-				account_map[split[2]].editValue(0 - transfer_amount);
-				account_map[split[3]].editValue(transfer_amount);
+			account_map[split[1]];
+		}
+		
+		void removeAccount(vector<string> split) {
+			/*	removes an account
+				only argument is a vector with the split user input (r {accountname})*/
+
+			if (account_map.count(split[1]) == 0) {std::cout << "not an account!\n"; return;}
+			else if (split.size() != 2) {std::cout << "invalid syntax - number of args,(r {accountname})\n"; return;}
+			
+			account_map.erase(split[1]);
+		}
+		
+		void payment (vector<string> split) {
+			/* 	pays an amount into or out of an account
+				only argument is a vector with the split user input (p {type} {accountname} {value})*/
+			
+			float pay_amount;
+			
+			if (split.size() != 4) {std::cout << "invalid syntax - number of args,(p {type} {accountname} {value}) use i for in and o for out in {type}\n"; return;}
+			try{pay_amount = std::stof(split[3]);} catch(std::exception& e) {std::cout << "non numeric\n"; return;}// check if amount is really float by checking if an exception is thrown (kinda ugly way to do it but oh well)
+			
+			string type = split[1];
+			string target_account_name = split[2];
+			
+			if (account_map.count(target_account_name) == 0) {std::cout << "not an account! \n"; return;}
+			
+			if (type == "i") {
+				account_map[target_account_name].editValue(pay_amount); 
+			} 
+			else if (type == "o") {
+				account_map[target_account_name].editValue(0 - pay_amount);
 			}
-			else {
-				std::cout << "invalid syntax - number of args,(t {amount} {payaccount} {recieveaccount})\n";
-			}
+			
+			else {std::cout << "invalid syntax - type,(p {type} {accountname} {value}) use i for in and o for out in {type}\n";}
+		}
+		
+		void transfer (vector<string> split) {
+			/*	transfers an amount between accounts
+				only argument is a vector with the split user input (t {amount} {payaccount} {recieveaccount})*/
+			
+			if (split.size() != 4) {std::cout << "invalid syntax - number of args,(t {amount} {payaccount} {recieveaccount})\n";}
+			if (account_map.count(split[2]) == 0 and account_map.count(split[3]) == 0) {std::cout << "not an account! \n"; return;}
+			
+			float transfer_amount;
+			try{transfer_amount = std::stof(split[1]);} catch (std::exception& e) {std::cout << "non numeric\n"; return;} // check if amount is really float
+			
+			account_map[split[2]].editValue(0 - transfer_amount);
+			account_map[split[3]].editValue(transfer_amount);
 		}
 		
 		void helpMenu() {
+			/*	(no args) display to user all commands that can be used */	
+			
 			std::cout << "q to quit \n";
 			std::cout << "n to make a new account \n";
 			std::cout << "r if you want to remove an account \n";
@@ -172,6 +163,8 @@ class term {
 		}
 		
 		void run() {
+			/*	(no args) run the cli */
+			
 			std::cout << "ReaLPU running \n";
 			std::cout << "type \"help\" for help \n";
 			bool loop = true;
@@ -180,25 +173,27 @@ class term {
 				std::cout << ">> ";
 				getline(std::cin, input);
 				
-				char i = input[0]; // first character is all we need for the first step, command funcs will handle arguments
+				vector<string> split = splitString(input);
+				
+				string i = split[0]; // first word or segment of split entails the command used
 				
 				// commands will be defined separately into their own functions for prettyness and use outside of the designated cli 
-				if (i == 'q') {loop = false;}
-				else if (not input.substr(0, 4).compare("help")) {helpMenu();}
-				else if (i == 'n') {newAccount(input);}
-				else if (i == 'r') {removeAccount(input);}
-				else if (i == 's') {displayAccount(input);}
-				else if (i == 'd') {displayAccountList();}
-				else if (i == 'p') {payment(input);}
-				else if (i == 't') {transfer(input);}
+				if (i == "q") {loop = false;}
+				else if (i == "help") {helpMenu();}
+				else if (i == "n") {newAccount(split);}
+				else if (i == "r") {removeAccount(split);}
+				else if (i == "s") {displayAccount(split);}
+				else if (i == "d") {displayAccountList();}
+				else if (i == "p") {payment(split);}
+				else if (i == "t") {transfer(split);}
 				else {std::cout << "that is not a valid input! type \"help\" for help \n";}
 			}
 		}
 };
 
 int main(){
-	#ifndef DEBUG
-		term running;
+	#ifndef DEBUG // define DEBUG if you want to do any specific testing of only one of the functions
+		term running; 
 		running.run();
 	
 		return 0;
