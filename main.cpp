@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <vector>
 #include <sstream>
+#include <stdio.h>
+#include <string.h> //Troy put this here. I am aware that it could be a duplicate.
 using std::string;
 using std::map;
 using std::vector;
