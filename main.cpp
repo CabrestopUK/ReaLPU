@@ -11,6 +11,10 @@ using std::map;
 using std::vector;
 using std::stringstream;
 
+//project includes
+#include "account-utils.h"
+using accountutils::account;
+
 auto splitString(string input) {
 	/* 	Splits a string into a list of "words", separates by spaces 
 		Requires a string as an argument only */
@@ -23,43 +27,6 @@ auto splitString(string input) {
 	}
 	return split;
 }
-
-class account {
-	/*	(no args) account object - stores account value and ledger of all transactions */
-
-	private: //variables kept in private for personal sanity :) - also incase of any features of specific accounts that require limits on changing value
-		float value = 0.00;
-		vector<string> ledger = {};
-		int transaction_num = 0; // primarily utilised for ledger
-	
-	public:
-		account(){
-			std::cout << "init account" << "\n";
-		}
-		
-		float getValue(){
-			/* 	(no args) returns float value of account */
-			
-			return value;
-		}
-		
-		auto getLedger(){
-			/* 	(no args) returns ledger(vector) of account transactions */
-			
-			return ledger;
-		}
-		
-		void editValue(float change){
-			/* 	changes value by float amount 
-				requires a float as an argument only*/
-				
-			value += change;
-			// (CabrestopUK) I KNOW WE COULD USE A BETTER LOG FOR THE LEDGER OK, I'M TOO LAZY TO SAVE ANYTHING ELSE - IF YOU WANT IT FORK THE REPO AND MAKE IT AND I WILL HAPPILY STEAL YOUR CODE
-			string ledge = "Transaction #[" + std::to_string(transaction_num) + "] - Change \x9C[" + std::to_string(change) + "] New Amount \x9C[" + std::to_string(value) + "]";
-			ledger.push_back(ledge);
-			transaction_num++;
-		}
-};
 
 class term {
 	/* 	(no args) CLI instance for ReaLPU */
