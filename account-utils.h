@@ -1,9 +1,10 @@
 // original contributer: CabrestopUK
+#ifndef ACCOUNT_UTILS
+#define ACCOUNT_UTILS
+
 #include <string>
 #include <vector>
 
-#ifndef ACCOUNT_UTILS
-#define ACCOUNT_UTILS
 namespace accountutils {
 	/*	ALL THE ACCOUNT TYPES AND THEIR METHODS */
 	class account {
