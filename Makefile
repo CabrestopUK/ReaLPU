@@ -1,5 +1,5 @@
 #original contributer: CabrestopUK
-all: main.exe clean
+all: main.exe
 
 main.exe: main.o account-utils.o type-utils.o
 	g++ main.o account-utils.o type-utils.o -o main
