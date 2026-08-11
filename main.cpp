@@ -34,7 +34,7 @@ class term {
 			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(d {accountname})\n"; return;}
 			
 			string account_name = split[1];
-			if (not ws.getAccountStatus(account_name)) {std::cout << "not an account!"; return;}
+			if (not ws.getAccountStatus(account_name)) {std::cout << "not an account! \n"; return;}
 		
 			std::cout << "\x9C" << std::fixed << std::setprecision(2) << ws.getAccountValue(account_name) << "\n"; 
 			for (string ledge : ws.getAccountLedger(account_name)) {
