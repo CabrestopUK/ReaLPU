@@ -1,6 +1,7 @@
 //original contributer: CabrestopUK
 #include "type-utils.h"
 
+#include <iostream> 
 #include <string>
 #include <vector>
 #include <sstream>
