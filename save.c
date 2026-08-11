@@ -1,4 +1,7 @@
 // Author: Troy Davies
+#include <stdio.h>
+#include <string.h> //Troy put this here. I am aware that it could be a duplicate.
+
 void savetoram() {}
 void savetorom() {
   FILE *file
