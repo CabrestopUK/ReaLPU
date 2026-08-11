@@ -7,7 +7,6 @@
 using std::string;
 using std::vector;
 using std::stringstream;
-using std::iostream;
 
 vector<string> typeutils::splitString(string input) {
 	/* 	Splits a string into a list of "words", separates by spaces 
