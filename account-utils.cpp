@@ -136,6 +136,11 @@ bool workspaces::workspaceclassic::fileDump(string target_file) {
 	
 	std::ofstream save;
 	save.open(target_file);
+	
+	if (!save.is_open()) {
+		return false;
+	}
+	
 	for (auto acc : account_map) {
 		save << acc.first;
 		save << " ";
@@ -158,6 +163,11 @@ bool workspaces::workspaceclassic::fileCollect(string target_file) {
 	std::string line;
 	std::ifstream load;
 	load.open(target_file);
+	
+	if (!load.is_open()) {
+		return false;
+	}
+	
 	while (getline (load, line)) {
 		//(the lines of the savefile will be something like this: {name} {value} {ledger1} {ledger2}...)
 		vector<string> split = splitString(line);

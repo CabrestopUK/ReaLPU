@@ -112,6 +112,26 @@ class term {
 			if (not status) {std::cout << "not an account! \n"; return;}
 		}
 		
+		void save(vector<string> split) {
+			/*	saves the workspace to a file
+				only argument is a vector with the split user input (o {file_name})*/
+			
+			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(i {filename})" << "\n"; return;}
+			bool status = ws.fileDump(split[1]);
+			if (!status) {std::cout << "file did not open..." << "\n"; return;}
+			std::cout << "saved! \n";
+		}
+		
+		void load(vector<string> split) {
+			/*	saves the workspace to a file
+				only argument is a vector with the split user input (i {file_name})*/
+			
+			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(i {filename})" << "\n"; return;}
+			bool status = ws.fileCollect(split[1]);
+			if (!status) {std::cout << "file did not open..." << "\n"; return;}
+			std::cout << "loaded! \n";
+		}
+		
 		void helpMenu() {
 			/*	(no args) display to user all commands that can be used */	
 			
@@ -122,6 +142,8 @@ class term {
 			std::cout << "t to transfer between accounts \n";
 			std::cout << "s to show an accounts info \n";
 			std::cout << "d to display all accounts and their balances \n";
+			std::cout << "o to save the workspace to a file \n";
+			std::cout << "i to load a workspace from a file \n";
 		}
 		
 		void run() {
@@ -148,13 +170,15 @@ class term {
 				else if (i == "d") {displayAccountList();}
 				else if (i == "p") {payment(split);}
 				else if (i == "t") {transfer(split);}
+				else if (i == "i") {load(split);}
+				else if (i == "o") {save(split);}
 				else {std::cout << "that is not a valid input! type \"help\" for help \n";}
 			}
 		}
 };
 
 int main(){
-	#ifndef DEBUG // define DEBUG if you want to do any specific testing of only one of the functions
+	#ifndef DEBUG // define DEBUG if you want to do any specific testing of something
 		term running; 
 		running.run();
 	
