@@ -8,6 +8,4 @@ Read more [in the wiki](https://github.com/CabrestopUK/ReaLPU/wiki)
 
 
 # Compiling
-Currently, you need a c compiler and gnu make.
-Then, clone into main and run:
-"make check"
+See [Compiling in the wiki](https://github.com/CabrestopUK/ReaLPU/wiki/Compile)
