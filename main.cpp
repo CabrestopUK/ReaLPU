@@ -148,8 +148,7 @@ class term {
 				else if (i == "d") {displayAccountList();}
 				else if (i == "p") {payment(split);}
 				else if (i == "t") {transfer(split);}
-				else if (i == " ") {std::cout << "That is not a valid input! type \"help\" for help\n";}
-				else {std::cout << "That is not a valid input! type \"help\" for help \n";} // Why isit that when I just type a tab, it crashes?
+				else {std::cout << "That is not a valid input! type \"help\" for help \n";}
 			}
 		}
 };
