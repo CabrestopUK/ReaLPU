@@ -21,6 +21,7 @@ namespace accountutils {
 			account();
 			float getValue();
 			std::vector<std::string> getLedger();
+			void pushLedger(std::vector<std::string> ledger_input);
 			void editValue(float change);
 	};
 	
@@ -42,6 +43,8 @@ namespace accountutils {
 				bool removeAccount(std::string account_name);
 				bool payment(float amount, std::string account_name);
 				bool transfer(float amount, std::string account1, std::string account2);
+				bool fileDump(std::string target_file);
+				bool fileCollect(std::string target_file);
 		};
 	}
 }
