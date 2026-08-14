@@ -24,7 +24,7 @@ class term {
 		workspaceclassic ws;
 		
 		term() {
-			std::cout << "ReaLPU ver indev - made by CabrestopUK \n";
+			std::cout << "ReaLPU ver indev - Developed by CabrestopUK and Troy.\n";
 		}
 		
 		void displayAccount(vector<string> split) {
