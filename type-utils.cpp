@@ -8,6 +8,9 @@ using std::string;
 using std::vector;
 using std::stringstream;
 
+//
+//	typeutils namespace
+//
 vector<string> typeutils::splitString(string input) {
 	/* 	Splits a string into a list of "words", separates by spaces 
 		Requires a string as an argument only */

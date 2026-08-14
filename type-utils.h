@@ -7,7 +7,7 @@
 
 namespace typeutils {
 	/* 	ALL THE UTILITIES RELATED TO MANAGING DATA TYPES */
-	std::vector<std::string> splitString(std::string input);
+	std::vector<std::string> splitString(std::string input);	
 }
 
 #endif
