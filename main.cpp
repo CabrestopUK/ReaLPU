@@ -31,7 +31,7 @@ class term {
 			/*	display the information of a single account 
 				only argument is a vector with the split user input (d {accountname})*/
 			
-			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(d {accountname})\n"; return;}
+			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(s {accountname})\n"; return;}
 			
 			string account_name = split[1];
 			if (not ws.getAccountStatus(account_name)) {std::cout << "not an account! \n"; return;}
