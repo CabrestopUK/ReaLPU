@@ -1,6 +1,7 @@
 // original contributer: CabrestopUK
 #include "account-utils.h"
 #include "type-utils.h"
+#include "csv.h"
 using namespace typeutils;
 
 #include <iostream>
@@ -134,25 +135,26 @@ bool workspaces::workspaceclassic::fileDump(string target_file) {
 	/*	saves workspace to a file
 		requires argument target_file (target file address) */
 	
-	std::ofstream save;
-	save.open(target_file);
-	
-	if (!save.is_open()) {
+	try {
+		csv::writeCsv write(target_file);
+	}
+	catch (std::runtime_error) {
 		return false;
 	}
 	
+	csv::writeCsv write(target_file); //(CabrestopUK) inefficient AF i know but it is [00:25] right now and i need sleep :)
+	vector<string> line;
+	
 	for (auto acc : account_map) {
-		save << acc.first;
-		save << " ";
-		save << std::to_string(acc.second.getValue());
-		save << " ";
+		line.push_back(acc.first);
+		line.push_back(std::to_string(acc.second.getValue()));
 		for (auto ledge : acc.second.getLedger()) {
-			save << ledge;
-			save << " ";
+			line.push_back(ledge);
 		}
-		save << std::endl;
+		write.writeLine(line);
+		line.clear();
 	}
-	save.close();
+	
 	return true;
 }
 
@@ -160,17 +162,18 @@ bool workspaces::workspaceclassic::fileCollect(string target_file) {
 	/*	loads workspace from a file
 		requires argument target_file (target file address) */
 	
-	std::string line;
-	std::ifstream load;
-	load.open(target_file);
-	
-	if (!load.is_open()) {
+	try {
+		csv::readCsv read(target_file);
+	}
+	catch (std::runtime_error) {
 		return false;
 	}
 	
-	while (getline (load, line)) {
-		//(the lines of the savefile will be something like this: {name} {value} {ledger1} {ledger2}...)
-		vector<string> split = splitString(line);
+	csv::readCsv read(target_file); //(CabrestopUK) inefficient AF i know but it is [00:25] right now and i need sleep :)
+	auto vector_file = read.readFile();
+	
+	//(the lines of the savefile will be something like this: {name},{value},{ledger1},{ledger2}...)
+	for (vector<string> split : vector_file) {
 		account_map[split[0]];
 		account_map[split[0]].editValue(std::stof(split[1]));
 		vector<string> pushable_ledger = {};
