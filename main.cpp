@@ -21,6 +21,7 @@ class term {
 	
 	public:
 		string input = "";
+		bool autosave = false;
 		workspaceclassic ws;
 		
 		term() {
@@ -145,7 +146,24 @@ class term {
 			std::cout << "o to save the workspace to a file \n";
 			std::cout << "i to load a workspace from a file \n";
 		}
-		
+
+		void autosave(vector<string> split) { // Autosave function which takes split variable from input
+		if (split.size() != 2 && spilt.size() != 1) { // If the command is not two or one word long,
+			std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return; // do an error
+		}
+		if (spilt.size() == 1) {std::cout << "Autosave is " << std::boolalpha << autosave << " \n"; return;} // If user just types "autosave" then tell them; in true or false, if autosave is enabled
+		else if (split[1] == "false") {autosave = false;} // If user says false, set to false
+		else if (split[1] == "true") {autosave = true;} // If user says true, set to true
+		else {std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return;} // Otherwise, give up with error.
+		}
+
+		void quit() { // New quit function
+			if  (autosave == true) { // Check if autosaving; if not, do not autosave to save.csv
+				bool status = ws.fileDump("save.csv"); // Save file with name "save.csv" if it works
+			}
+			loop = false; // Quit the application
+		}
+
 		void run() {
 			/*	(no args) run the cli */
 			
@@ -162,7 +180,7 @@ class term {
 				string i = split[0]; // first word or segment of split entails the command used
 				
 				// commands will be defined separately into their own functions for prettyness and use outside of the designated cli 
-				if (i == "q") {loop = false;}
+				if (i == "q") {quit();}
 				else if (i == "help") {helpMenu();}
 				else if (i == "n") {newAccount(split);}
 				else if (i == "r") {removeAccount(split);}
@@ -172,6 +190,7 @@ class term {
 				else if (i == "t") {transfer(split);}
 				else if (i == "i") {load(split);}
 				else if (i == "o") {save(split);}
+				else if (i == "autosave") {autosave(split);}
 				else {std::cout << "That is not a valid input! type \"help\" for help \n";}
 			}
 		}
