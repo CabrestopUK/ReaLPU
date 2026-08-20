@@ -34,7 +34,7 @@ class term {
 			if (split.size() != 2) {std::cout << "Invalid syntax - number of args,(d {accountname})\n"; return;}
 			
 			string account_name = split[1];
-			if (not ws.getAccountStatus(account_name)) {std::cout << "not an account! \n"; return;}
+			if (not ws.getAccountStatus(account_name)) {std::cout << "Not an account! \n"; return;}
 		
 			std::cout << "\x9C" << std::fixed << std::setprecision(2) << ws.getAccountValue(account_name) << "\n"; 
 			for (string ledge : ws.getAccountLedger(account_name)) {
@@ -54,12 +54,12 @@ class term {
 			/* 	creates a new account
 				only argument is a vector with the split user input (n {accountname}) */
 				
-			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(n {accountname})\n"; return;}
+			if (split.size() != 2) {std::cout << "Invalid syntax - number of args,(n {accountname})\n"; return;}
 			
 			string name = split[1];
 			
 			bool status = ws.createAccount(name);
-			if (not status) {std::cout << "no duplicate accounts!\n";} 
+			if (not status) {std::cout << "No duplicate accounts!\n";} 
 		}
 		
 		void removeAccount(vector<string> split) {
@@ -80,7 +80,7 @@ class term {
 			float pay_amount;
 			
 			if (split.size() != 4) {std::cout << "Invalid syntax - number of args,(p {type} {accountname} {value}) use i for in and o for out in {type}\n"; return;}
-			try{pay_amount = std::stof(split[3]);} catch(std::exception& e) {std::cout << "non numeric\n"; return;}// check if amount is really float by checking if an exception is thrown (kinda ugly way to do it but oh well)
+			try{pay_amount = std::stof(split[3]);} catch(std::exception& e) {std::cout << "Non numeric\n"; return;}// check if amount is really float by checking if an exception is thrown (kinda ugly way to do it but oh well)
 			
 			string type = split[1];
 			string target_account_name = split[2];
@@ -116,9 +116,9 @@ class term {
 			/*	saves the workspace to a file
 				only argument is a vector with the split user input (o {file_name})*/
 			
-			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(i {filename})" << "\n"; return;}
+			if (split.size() != 2) {std::cout << "Invalid syntax - number of args,(o {filename})" << "\n"; return;}
 			bool status = ws.fileDump(split[1]);
-			if (!status) {std::cout << "file did not open..." << "\n"; return;}
+			if (!status) {std::cout << "File did not open..." << "\n"; return;}
 			std::cout << "saved! \n";
 		}
 		
@@ -126,10 +126,10 @@ class term {
 			/*	saves the workspace to a file
 				only argument is a vector with the split user input (i {file_name})*/
 			
-			if (split.size() != 2) {std::cout << "invalid syntax - number of args,(i {filename})" << "\n"; return;}
+			if (split.size() != 2) {std::cout << "Invalid syntax - number of args,(i {filename})" << "\n"; return;}
 			bool status = ws.fileCollect(split[1]);
-			if (!status) {std::cout << "file did not open..." << "\n"; return;}
-			std::cout << "loaded! \n";
+			if (!status) {std::cout << "File did not open..." << "\n"; return;}
+			std::cout << "Loaded! \n";
 		}
 		
 		void helpMenu() {
