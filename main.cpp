@@ -149,19 +149,28 @@ class term {
 		}
 
 		void autosavefunc(vector<string> split) { // Autosave function which takes split variable from input
-			if (split.size() != 2 && spilt.size() != 1) { // If the command is not two or one word long,
+			if (split.size() != 2 && split.size() != 1) { // If the command is not two or one word long,
 				std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return; // do an error
 		}
-			if (split.size() == 1) {std::cout << "Autosave is " << std::boolalpha << autosave << " \n"; return;} // If user just types "autosave" then tell them; in true or false, if autosave is enabled
-			else if (split[1] == "false") {autosave = false;} // If user says false, set to false
-			else if (split[1] == "true") {autosave = true;} // If user says true, set to true
+			if (split.size() == 1) {std::cout << "Autosave is " << std::boolalpha << autosave << ".\n"; return;} // If user just types "autosave" then tell them; in true or false, if autosave is enabled
+			else if (split[1] == "false") {
+				std::cout << "This will delete autosave.csv in the application directory. You can still save your progress from this session manually.\n";
+				autosave = false;
+				int status = remove("autosave.csv"); //Remove autosave file.
+				if (status) {}
+				else {std::cout << "Autosave turned off.\n";
+				}
+			} // If user says false, set to false
+			else if (split[1] == "true") {
+				autosave = true;
+				std::cout << "Autosave turned on.\n";
+			} // If user says true, set to true
 			else {std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return;} // Otherwise, give up with error.
 		}
 
 		void quit() { // New quit function
-			if  (autosave == true) { // Check if autosaving; if not, do not autosave to save.csv
-				bool status = ws.fileDump("save.csv"); // Save file with name "save.csv" if it works
-			}
+			if  (autosave == true) {bool status = ws.fileDump("autosave.csv"); // Save file with name "autosave.csv" if it works
+			if (not status) {std::cout << "ERROR";}}
 			loop = false; // Quit the application
 		}
 
@@ -190,7 +199,7 @@ class term {
 				else if (i == "t") {transfer(split);}
 				else if (i == "i") {load(split);}
 				else if (i == "o") {save(split);}
-				else if (i == "autosave") {autosave(split);}
+				else if (i == "autosave") {autosavefunc(split);}
 				else {std::cout << "That is not a valid input! type \"help\" for help \n";}
 			}
 		}
