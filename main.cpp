@@ -22,6 +22,7 @@ class term {
 	public:
 		string input = "";
 		bool autosave = false;
+		bool loop = true;
 		workspaceclassic ws;
 		
 		term() {
@@ -147,14 +148,14 @@ class term {
 			std::cout << "i to load a workspace from a file \n";
 		}
 
-		void autosave(vector<string> split) { // Autosave function which takes split variable from input
-		if (split.size() != 2 && spilt.size() != 1) { // If the command is not two or one word long,
-			std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return; // do an error
+		void autosavefunc(vector<string> split) { // Autosave function which takes split variable from input
+			if (split.size() != 2 && spilt.size() != 1) { // If the command is not two or one word long,
+				std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return; // do an error
 		}
-		if (spilt.size() == 1) {std::cout << "Autosave is " << std::boolalpha << autosave << " \n"; return;} // If user just types "autosave" then tell them; in true or false, if autosave is enabled
-		else if (split[1] == "false") {autosave = false;} // If user says false, set to false
-		else if (split[1] == "true") {autosave = true;} // If user says true, set to true
-		else {std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return;} // Otherwise, give up with error.
+			if (split.size() == 1) {std::cout << "Autosave is " << std::boolalpha << autosave << " \n"; return;} // If user just types "autosave" then tell them; in true or false, if autosave is enabled
+			else if (split[1] == "false") {autosave = false;} // If user says false, set to false
+			else if (split[1] == "true") {autosave = true;} // If user says true, set to true
+			else {std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return;} // Otherwise, give up with error.
 		}
 
 		void quit() { // New quit function
@@ -169,7 +170,6 @@ class term {
 			
 			std::cout << "ReaLPU running \n";
 			std::cout << "Type \"help\" for help \n";
-			bool loop = true;
 	
 			while (loop) {
 				std::cout << ">> ";
