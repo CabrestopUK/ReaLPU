@@ -16,6 +16,19 @@ using namespace accountutils::workspaces;
 #include "type-utils.h"
 using namespace typeutils;
 
+bool checkStringVectorSize(vector<string> v,int size, string message) {
+	/*	checks a (string) vectors size and returns a message on false
+		requires size argument
+		requires argument string */
+	if (v.size() == size) {
+		return true;
+	}
+	else {
+		std::cout << message;
+		return false;
+	}
+}
+
 class term {
 	/* 	(no args) CLI instance for ReaLPU */
 	
@@ -31,12 +44,13 @@ class term {
 			/*	display the information of a single account 
 				only argument is a vector with the split user input (d {accountname})*/
 			
-			if (split.size() != 2) {std::cout << "Invalid syntax - number of args,(d {accountname})\n"; return;}
+			if (!checkStringVectorSize(split, 2, "Invalid syntax - number of args,(d {accountname})\n")) {return;}
 			
 			string account_name = split[1];
 			if (not ws.getAccountStatus(account_name)) {std::cout << "Not an account! \n"; return;}
 		
 			std::cout << "\x9C" << std::fixed << std::setprecision(2) << ws.getAccountValue(account_name) << "\n"; 
+			std::cout << ws.getAccountMeta(account_name) << "\n";
 			for (string ledge : ws.getAccountLedger(account_name)) {
 				std::cout << ledge << "\n";
 			}
@@ -54,7 +68,7 @@ class term {
 			/* 	creates a new account
 				only argument is a vector with the split user input (n {accountname}) */
 				
-			if (split.size() != 2) {std::cout << "Invalid syntax - number of args,(n {accountname})\n"; return;}
+			if (!checkStringVectorSize(split, 2, "Invalid syntax - number of args,(n {accountname})\n")) {return;}
 			
 			string name = split[1];
 			
@@ -66,11 +80,28 @@ class term {
 			/*	removes an account
 				only argument is a vector with the split user input (r {accountname})*/
 			
-			if (split.size() != 2) {std::cout << "Invalid syntax - number of args,(r {accountname})\n"; return;}
+			if (!checkStringVectorSize(split, 2, "Invalid syntax - number of args,(r {accountname})\n")) {return;}
 			string name = split[1];
 			
 			bool status = ws.removeAccount(name);
 			if (not status) {std::cout << "Not an account!\n"; return;}
+		}
+		
+		void editAccountDescription(vector<string> split) {
+			/*	edits an account's description
+				only argument is a vector with the split user input (e {account_name} {desc}...)*/
+		
+			if (split.size() < 3) {std::cout << "Invalid syntax - number of args, (e {account_name} {desc}...)\n"; return;}
+			
+			string desc = "";
+			for (int i = 2; i < split.size(); i++) {
+				desc += split[i] + " ";
+			}
+			
+			bool status = ws.editAccountMeta(split[1], desc);
+			if (!status) {
+				std::cout << "Not an account! \n";
+			}
 		}
 		
 		void payment (vector<string> split) {
@@ -79,7 +110,7 @@ class term {
 			
 			float pay_amount;
 			
-			if (split.size() != 4) {std::cout << "Invalid syntax - number of args,(p {type} {accountname} {value}) use i for in and o for out in {type}\n"; return;}
+			if (!checkStringVectorSize(split, 4, "Invalid syntax - number of args,(p {type} {accountname} {value}) use i for in and o for out in {type}\n")) {return;}
 			try{pay_amount = std::stof(split[3]);} catch(std::exception& e) {std::cout << "Non numeric\n"; return;}// check if amount is really float by checking if an exception is thrown (kinda ugly way to do it but oh well)
 			
 			string type = split[1];
@@ -102,7 +133,7 @@ class term {
 			/*	transfers an amount between accounts
 				only argument is a vector with the split user input (t {amount} {payaccount} {recieveaccount})*/
 			
-			if (split.size() != 4) {std::cout << "Invalid syntax - number of args,(t {amount} {payaccount} {recieveaccount})\n"; return;}
+			if (!checkStringVectorSize(split, 4, "Invalid syntax - number of args,(t {amount} {payaccount} {recieveaccount})\n")) {return;}
 			
 			float transfer_amount;
 			try{transfer_amount = std::stof(split[1]);} catch (std::exception& e) {std::cout << "non numeric\n"; return;} // check if amount is really float
@@ -116,7 +147,7 @@ class term {
 			/*	saves the workspace to a file
 				only argument is a vector with the split user input (o {file_name})*/
 			
-			if (split.size() != 2) {std::cout << "Invalid syntax - number of args,(o {filename})" << "\n"; return;}
+			if (!checkStringVectorSize(split, 2, "Invalid syntax - number of args,(o {filename}) \n")) {return;}
 			bool status = ws.fileDump(split[1]);
 			if (!status) {std::cout << "File did not open..." << "\n"; return;}
 			std::cout << "saved! \n";
@@ -126,7 +157,7 @@ class term {
 			/*	saves the workspace to a file
 				only argument is a vector with the split user input (i {file_name})*/
 			
-			if (split.size() != 2) {std::cout << "Invalid syntax - number of args,(i {filename})" << "\n"; return;}
+			if (!checkStringVectorSize(split, 2, "Invalid syntax - number of args,(i {filename})")) {return;}
 			bool status = ws.fileCollect(split[1]);
 			if (!status) {std::cout << "File did not open..." << "\n"; return;}
 			std::cout << "Loaded! \n";
@@ -138,6 +169,7 @@ class term {
 			std::cout << "q to quit \n";
 			std::cout << "n to make a new account \n";
 			std::cout << "r if you want to remove an account \n";
+			std::cout << "e to edit the account description \n";
 			std::cout << "p to make a payment to or from an account \n";
 			std::cout << "t to transfer between accounts \n";
 			std::cout << "s to show an accounts info \n";
@@ -172,6 +204,7 @@ class term {
 				else if (i == "t") {transfer(split);}
 				else if (i == "i") {load(split);}
 				else if (i == "o") {save(split);}
+				else if (i == "e") {editAccountDescription(split);}
 				else {std::cout << "That is not a valid input! type \"help\" for help \n";}
 			}
 		}

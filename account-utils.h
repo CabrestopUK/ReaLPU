@@ -15,6 +15,7 @@ namespace accountutils {
 		private: //variables kept in private for personal sanity :) - also incase of any features of specific accounts that require limits on changing value
 			float value = 0.00;
 			std::vector<std::string> ledger = {};
+			std::string metadata = "";
 			int transaction_num = 0; // primarily utilised for ledger
 			
 		public:
@@ -22,6 +23,8 @@ namespace accountutils {
 			float getValue();
 			std::vector<std::string> getLedger();
 			void pushLedger(std::vector<std::string> ledger_input);
+			void pushMeta(std::string);
+			std::string getMeta();
 			void editValue(float change);
 	};
 	
@@ -38,11 +41,13 @@ namespace accountutils {
 				bool getAccountStatus(std::string account_name);
 				float getAccountValue(std::string account_name);
 				std::vector<std::string> getAccountLedger(std::string account_name);
+				std::string getAccountMeta(std::string account_name);
 				std::vector<std::string> getAllAccountNames();
 				bool createAccount(std::string name);
 				bool removeAccount(std::string account_name);
 				bool payment(float amount, std::string account_name);
 				bool transfer(float amount, std::string account1, std::string account2);
+				bool editAccountMeta(std::string account_name, std::string meta);
 				bool fileDump(std::string target_file);
 				bool fileCollect(std::string target_file);
 		};
