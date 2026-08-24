@@ -1,5 +1,6 @@
 // original contributer: CabrestopUK
 // note "\x9C" has to be used instead of £
+// This code is held together by if statements!
 #include <iostream>
 #include <map>
 #include <string>
@@ -21,7 +22,7 @@ class term {
 	
 	public:
 		string input = "";
-		bool autosave = false;
+		bool autosave = true;
 		bool loop = true;
 		workspaceclassic ws;
 		
@@ -181,6 +182,8 @@ class term {
 			std::cout << "Type \"help\" for help \n";
 	
 			while (loop) {
+				bool status = ws.fileCollect("autosave.csv");
+				if (!status) {autosave = false;}
 				std::cout << ">> ";
 				getline(std::cin, input);
 				
