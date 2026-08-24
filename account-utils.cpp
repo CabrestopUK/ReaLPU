@@ -167,7 +167,7 @@ bool workspaces::workspaceclassic::fileDump(string target_file) {
 	try {
 		csv::writeCsv write(target_file);
 	}
-	catch (std::runtime_error) {
+	catch (std::runtime_error &e) {
 		return false;
 	}
 	
@@ -195,7 +195,7 @@ bool workspaces::workspaceclassic::fileCollect(string target_file) {
 	try {
 		csv::readCsv read(target_file);
 	}
-	catch (std::runtime_error) {
+	catch (std::runtime_error &e) {
 		return false;
 	}
 	
@@ -208,7 +208,7 @@ bool workspaces::workspaceclassic::fileCollect(string target_file) {
 		account_map[split[0]].editValue(std::stof(split[1]));
 		account_map[split[0]].pushMeta(split[2]);
 		vector<string> pushable_ledger = {};
-		for (int i = 3; i < split.size(); i++) {
+		for (long long unsigned int i = 3; i < split.size(); i++) {
 			pushable_ledger.push_back(split[i]);
 		}
 		account_map[split[0]].pushLedger(pushable_ledger);

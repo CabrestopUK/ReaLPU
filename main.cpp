@@ -1,5 +1,6 @@
 // original contributer: CabrestopUK
 // note "\x9C" has to be used instead of £
+// This code is held together by if statements!
 #include <iostream>
 #include <map>
 #include <string>
@@ -34,6 +35,8 @@ class term {
 	
 	public:
 		string input = "";
+		bool autosave = true;
+		bool loop = true;
 		workspaceclassic ws;
 		
 		term() {
@@ -56,6 +59,10 @@ class term {
 			}
 		}
 		
+		void checkautosave() {
+		bool status = ws.fileCollect("autosave.csv");
+		if (!status) {autosave = false;}
+		}
 		void displayAccountList() {
 			/* 	(no args) displays all accounts in the account_map with their values */
 			
@@ -177,14 +184,39 @@ class term {
 			std::cout << "o to save the workspace to a file \n";
 			std::cout << "i to load a workspace from a file \n";
 		}
-		
+
+		void autosavefunc(vector<string> split) { // Autosave function which takes split variable from input
+			if (split.size() != 2 && split.size() != 1) { // If the command is not two or one word long,
+				std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return; // do an error
+		}
+			if (split.size() == 1) {std::cout << "Autosave is " << std::boolalpha << autosave << ".\n"; return;} // If user just types "autosave" then tell them; in true or false, if autosave is enabled
+			else if (split[1] == "false") {
+				std::cout << "This will delete autosave.csv in the application directory. You can still save your progress from this session manually.\n";
+				autosave = false;
+				int status = remove("autosave.csv"); //Remove autosave file.
+				if (status) {}
+				else {std::cout << "Autosave turned off.\n";
+				}
+			} // If user says false, set to false
+			else if (split[1] == "true") {
+				autosave = true;
+				std::cout << "Autosave turned on.\n";
+			} // If user says true, set to true
+			else {std::cout << "Invalid syntax - number of args,(autosave {status})" << "\n"; return;} // Otherwise, give up with error.
+		}
+
+		void quit() { // New quit function
+			if  (autosave == true) {bool status = ws.fileDump("autosave.csv"); // Save file with name "autosave.csv" if it works
+			if (not status) {std::cout << "ERROR";}}
+			loop = false; // Quit the application
+		}
+
 		void run() {
 			/*	(no args) run the cli */
 			
 			std::cout << "ReaLPU running \n";
 			std::cout << "Type \"help\" for help \n";
-			bool loop = true;
-	
+			checkautosave();
 			while (loop) {
 				std::cout << ">> ";
 				getline(std::cin, input);
@@ -194,7 +226,7 @@ class term {
 				string i = split[0]; // first word or segment of split entails the command used
 				
 				// commands will be defined separately into their own functions for prettyness and use outside of the designated cli 
-				if (i == "q") {loop = false;}
+				if (i == "q") {quit();}
 				else if (i == "help") {helpMenu();}
 				else if (i == "n") {newAccount(split);}
 				else if (i == "r") {removeAccount(split);}
@@ -205,6 +237,7 @@ class term {
 				else if (i == "i") {load(split);}
 				else if (i == "o") {save(split);}
 				else if (i == "e") {editAccountDescription(split);}
+				else if (i == "autosave") {autosavefunc(split);}
 				else {std::cout << "That is not a valid input! type \"help\" for help \n";}
 			}
 		}
