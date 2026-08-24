@@ -36,6 +36,17 @@ void account::pushLedger(vector<string> ledger_input){
 	ledger = ledger_input;
 }
 
+void account::pushMeta(std::string meta_input) {
+	/*	Overwrites the account ledger
+		requires vector input of strings (the ledger) */
+	
+	metadata = meta_input;
+}
+
+string account::getMeta() {
+	return metadata;
+}
+
 void account::editValue(float change){
 	/* 	changes value by float amount 
 		requires a float as an argument only*/
@@ -75,6 +86,13 @@ vector<string> workspaces::workspaceclassic::getAccountLedger(string account_nam
 		Requires string account name as argument */
 	
 	return account_map[account_name].getLedger();
+}
+
+string workspaces::workspaceclassic::getAccountMeta(string account_name) {
+	/* 	Get the metadata (description) of an account
+		Requires string account_name as argument */
+		
+	return account_map[account_name].getMeta();
 }
 
 vector<string> workspaces::workspaceclassic::getAllAccountNames() {
@@ -131,6 +149,17 @@ bool workspaces::workspaceclassic::transfer(float amount, string account1, strin
 	return true;
 }
 
+bool workspaces::workspaceclassic::editAccountMeta(string account_name, string meta) {
+	/*	returns the account meta (description) returns true or false depending on if the command is a success
+		requires string account_name
+		requires string meta */
+	
+	if (not getAccountStatus(account_name)) {return false;}
+	
+	account_map[account_name].pushMeta(meta);
+	return true;
+}
+
 bool workspaces::workspaceclassic::fileDump(string target_file) {
 	/*	saves workspace to a file
 		requires argument target_file (target file address) */
@@ -148,6 +177,7 @@ bool workspaces::workspaceclassic::fileDump(string target_file) {
 	for (auto acc : account_map) {
 		line.push_back(acc.first);
 		line.push_back(std::to_string(acc.second.getValue()));
+		line.push_back(acc.second.getMeta());
 		for (auto ledge : acc.second.getLedger()) {
 			line.push_back(ledge);
 		}
@@ -176,8 +206,9 @@ bool workspaces::workspaceclassic::fileCollect(string target_file) {
 	for (vector<string> split : vector_file) {
 		account_map[split[0]];
 		account_map[split[0]].editValue(std::stof(split[1]));
+		account_map[split[0]].pushMeta(split[2]);
 		vector<string> pushable_ledger = {};
-		for (long long unsigned int i = 2; i < split.size(); i++) {
+		for (long long unsigned int i = 3; i < split.size(); i++) {
 			pushable_ledger.push_back(split[i]);
 		}
 		account_map[split[0]].pushLedger(pushable_ledger);
