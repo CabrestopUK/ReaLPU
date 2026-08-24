@@ -45,6 +45,10 @@ class term {
 			}
 		}
 		
+		void checkautosave() {
+		bool status = ws.fileCollect("autosave.csv");
+		if (!status) {autosave = false;}
+		}
 		void displayAccountList() {
 			/* 	(no args) displays all accounts in the account_map with their values */
 			
@@ -180,10 +184,8 @@ class term {
 			
 			std::cout << "ReaLPU running \n";
 			std::cout << "Type \"help\" for help \n";
-	
+			checkautosave();
 			while (loop) {
-				bool status = ws.fileCollect("autosave.csv");
-				if (!status) {autosave = false;}
 				std::cout << ">> ";
 				getline(std::cin, input);
 				
