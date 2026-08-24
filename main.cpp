@@ -17,7 +17,7 @@ using namespace accountutils::workspaces;
 #include "type-utils.h"
 using namespace typeutils;
 
-bool checkStringVectorSize(vector<string> v,int size, string message) {
+bool checkStringVectorSize(vector<string> v,long long unsigned int size, string message) {
 	/*	checks a (string) vectors size and returns a message on false
 		requires size argument
 		requires argument string */
@@ -101,7 +101,7 @@ class term {
 			if (split.size() < 3) {std::cout << "Invalid syntax - number of args, (e {account_name} {desc}...)\n"; return;}
 			
 			string desc = "";
-			for (int i = 2; i < split.size(); i++) {
+			for (long long unsigned int i = 2; i < split.size(); i++) {
 				desc += split[i] + " ";
 			}
 			
