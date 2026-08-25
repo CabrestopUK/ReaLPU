@@ -1,27 +1,49 @@
-#original contributer: CabrestopUK
-all: main.exe
-
-check:
-	g++ -c main.cpp -o main.o -Wall -Wextra -Wshadow -Werror
-	g++ -c csv.cpp -o csv.o -Wall -Wextra -Wshadow -Werror
-	g++ -c type-utils.cpp -o type-utils.o -Wall -Wextra -Wshadow -Werror
-	g++ -c account-utils.cpp -o account-utils.o -Wall -Wextra -Wshadow -Werror
-	g++ main.o account-utils.o type-utils.o csv.o -o main -Wall -Wextra -Wshadow -Werror
-	
-main.exe: main.o account-utils.o type-utils.o csv.o
-	g++ main.o account-utils.o type-utils.o csv.o -o main
-	
-csv.o: csv.h csv.cpp
-	g++ -c csv.cpp -o csv.o
-
-account-utils.o: account-utils.cpp account-utils.h
-	g++ -c account-utils.cpp -o account-utils.o 
-
-type-utils.o: type-utils.cpp type-utils.h
-	g++ -c type-utils.cpp -o type-utils.o 
-
-main.o: main.cpp
-	g++ -c main.cpp -o main.o 
-
-clean:
-	rm *.o
+# 		Compiler and flags  
+CXX =g++ # 					compiler
+CFLAGS =-Wall -Wextra -g # 	compiler flags 
+CFLAGS +=-MMD -MP # 		-MMD -MP for dependency generation  
+LDFLAGS =#					linker flags
+ 
+# 		Directories  
+SRC_DIR =src# 				source .cpp and .h
+INCLUDE_DIR =include# 		project wide include path
+BUILD_DIR =build# 			build path
+BIN_DIR =bin# 				(below)
+TARGET =$(BIN_DIR)/main# 	(where the .exe will go)
+ 
+# 		Include paths  
+INCLUDES = -I$(INCLUDE_DIR) -I$(SRC_DIR)
+ 
+# 		Find all .cpp files  
+SOURCES := $(shell find $(SRC_DIR) -name '*.cpp')  
+ 
+#		Generate object file paths  
+OBJECTS := $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SOURCES))  
+ 
+# 		Auto-generated dependency files  
+DEPS := $(OBJECTS:.o=.d)  
+ 
+# 		Phony targets  
+.PHONY: all clean  
+ 
+# 		Default target  
+all: $(TARGET)  
+ 
+# 		Build executable  
+$(TARGET): $(OBJECTS)  
+	@mkdir -p $(BIN_DIR)  
+	$(CXX) $(OBJECTS) $(LDFLAGS) -o $(TARGET)  
+	@echo "Built target: $@"  
+ 
+# 		Compile .cpp to .o  
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp  
+	@mkdir -p $(@D)  
+	$(CXX) $(CFLAGS) $(INCLUDES) -c $< -o $@  
+ 
+# 		Clean artifacts  
+clean:  
+	@rm -rf $(BUILD_DIR) $(BIN_DIR)  
+	@echo "Cleaned build and bin directories"  
+ 
+# 		Include dependencies  
+-include $(DEPS)  
