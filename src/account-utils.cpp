@@ -59,6 +59,56 @@ void account::editValue(float change){
 	transaction_num++;
 }
 //
+//		DEBITACCOUNT CLASS
+//
+debitAccount::account(){
+	std::cout << "init debitAccount" << "\n";
+}
+
+float debitAccount::getValue(){
+	/* 	(no args) returns float value of debitAccount */
+	
+	return value;
+}
+
+vector<string> debitAccount::getLedger(){
+	/* 	(no args) returns ledger(vector) of debitAccount transactions */
+	
+	return ledger;
+}
+
+void debitAccount::pushLedger(vector<string> ledger_input){
+	/*	Overwrites the debitAccount ledger
+		requires vector input of strings (the ledger) */
+	
+	ledger = ledger_input;
+}
+
+void debitAccount::pushMeta(std::string meta_input) {
+	/*	Overwrites the debitAccount ledger
+		requires vector input of strings (the ledger) */
+	
+	metadata = meta_input;
+}
+
+string debitAccount::getMeta() {
+	return metadata;
+}
+
+bool debitAccount::editValue(float change){
+	/* 	changes value by float amount returns false if over budget 
+		requires a float as an argument only */
+	if (value + change < 0) {return false;}
+
+	value += change;
+	
+	string ledge = "Transaction:#[" + std::to_string(transaction_num) + "]-Change:\x9C[" + std::to_string(change) + "]-NewAmount:\x9C[" + std::to_string(value) + "]";
+	ledger.push_back(ledge);
+	transaction_num++;
+	return true;
+}
+
+//
 //		WORKSPACECLASSIC CLASS
 //
 workspaces::workspaceclassic::workspaceclassic() {
