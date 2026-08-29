@@ -6,8 +6,10 @@
 #include <vector>
 
 namespace typeutils {
-	/* 	ALL THE UTILITIES RELATED TO MANAGING DATA TYPES */
-	std::vector<std::string> splitString(std::string input);	
+	/* 	ALL THE UTILITIES RELATED TO MANAGING DATA TYPES
+	update from Troy: Yeah, I am using it for my error function...*/
+	std::vector<std::string> splitString(std::string input);
+	void erroroutput();
 }
 
 #endif

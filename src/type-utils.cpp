@@ -34,3 +34,10 @@ vector<string> typeutils::splitString(string input) {
 	}
 	return split;
 }
+// The below loop will output the user the correct error and where it came from, as well as how to fix it if they can
+void erroroutput(std::string command, std::string errortype) { // Command examples: d, p, n...
+	std::cout << command << ": " << errortype << "\n"; // Errortype examples: syntax, filesave, null...
+	if (errortype == "syntax") {
+		std::cout << "Syntax guide:\n";
+	}
+}
