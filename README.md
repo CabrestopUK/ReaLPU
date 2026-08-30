@@ -13,4 +13,4 @@ Read more [in the wiki](https://github.com/CabrestopUK/ReaLPU/wiki)
 See [Compiling in the wiki](https://github.com/CabrestopUK/ReaLPU/wiki/Compile)
 
 # License
-Unless otherwise mentioned, all the repo, source files, binaries, and the wiki is licensed under GPLv2.
+Unless otherwise mentioned, all the repo, source files, binaries, and the wiki are licensed under GPLv2.
