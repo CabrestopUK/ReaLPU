@@ -27,6 +27,26 @@ namespace accountutils {
 			std::string getMeta();
 			void editValue(float change);
 	};
+
+	class debitAccount {
+		/*	(no args) debit account object - stores account value and ledger of all transactions
+		 *	will not let you spend more than you have */
+		
+		private: //variables kept in private for personal sanity :) - also incase of any features of specific accounts that require limits on changing value
+			float value = 0.00;
+			std::vector<std::string> ledger = {};
+			std::string metadata = "";
+			int transaction_num = 0; // primarily utilised for ledger
+			
+		public:
+			account();
+			float getValue();
+			std::vector<std::string> getLedger();
+			void pushLedger(std::vector<std::string> ledger_input);
+			void pushMeta(std::string);
+			std::string getMeta();
+			void editValue(float change);
+	};
 	
 	namespace workspaces {
 		/*	CONTAINS WORKSPACES FOR INTERACTING WITH ACCOUNTS */
